@@ -14,13 +14,26 @@ var ColorChanger = function () {
   var randomColorNoRepeat = function () {
     var color = randomColor();
 
+    /*
+    * NOTE: I used this check as the likihood of a repeat is less than
+    * 3/1E6 and the calculation is not particularly expensive nor is
+    * the check.
+    */
     while (_usedColors[color]) {
       color = randomColor();
     }
 
     _usedColors[color] = true;
     return color;
-  }
+  };
+
+  var changeColor = function () {
+    var color = randomColorNoRepeat();
+    var body = document.getElementsByTagName('body')[0];
+
+    _lastChange = new Date();
+    body.style.backgroundColor = color;
+  };
 
   /*
   * NOTE: setInterval is used because if I had set it to occur
@@ -34,11 +47,7 @@ var ColorChanger = function () {
         return;
       }
       if (new Date() >= new Date(_lastChange.valueOf() + second)) {
-        var color = randomColorNoRepeat();
-        var body = document.getElementsByTagName('body')[0];
-
-        _lastChange = new Date();
-        body.style.backgroundColor = color;
+        changeColor();
       }
     },
     10
